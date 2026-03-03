@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: 'selfhostedpool' # CHANGED: Pointing to your local agent
+  name: 'selfhostedpool'
 
 steps:
 - task: NodeTool@0
@@ -16,7 +16,6 @@ steps:
   displayName: 'Install dependencies and Build'
 
 - script: |
-    # CHANGED: Added project name and branch flag
     npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
   displayName: 'Deploy to Cloudflare Pages'
   env:
