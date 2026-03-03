@@ -8,6 +8,9 @@ variables:
 - group: 'cloudflare-vars'
 
 steps:
+- checkout: self
+  clean: true
+
 - task: NodeTool@0
   inputs:
     versionSpec: '20.x'
@@ -15,13 +18,19 @@ steps:
 
 - script: |
     npm install
-    npm run build
-  displayName: 'Install dependencies and Build'
+    npx vite build
+  displayName: 'Force Vite Build'
   workingDirectory: $(System.DefaultWorkingDirectory)
 
 - script: |
-    dir dist
-    npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
+    dir
+    if exist dist (
+      echo "Dist folder found! Proceeding..."
+      npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
+    ) else (
+      echo "Dist folder STILL missing. Checking for build errors..."
+      exit 1
+    )
   displayName: 'Deploy to Cloudflare Pages'
   workingDirectory: $(System.DefaultWorkingDirectory)
   env:
