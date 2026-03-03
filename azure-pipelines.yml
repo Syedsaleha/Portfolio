@@ -17,9 +17,13 @@ steps:
     npm install
     npm run build
   displayName: 'Install dependencies and Build'
+  workingDirectory: $(System.DefaultWorkingDirectory)
 
-- script: npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
+- script: |
+    dir dist
+    npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
   displayName: 'Deploy to Cloudflare Pages'
+  workingDirectory: $(System.DefaultWorkingDirectory)
   env:
     CLOUDFLARE_API_TOKEN: $(CF_PAGES_TOKEN)
     CLOUDFLARE_ACCOUNT_ID: $(CF_ACCOUNT_ID)
