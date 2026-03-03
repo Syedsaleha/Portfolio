@@ -1,0 +1,24 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'Install and Build'
+
+- script: |
+    # This pushes the 'dist' folder created by Vite to Cloudflare
+    npx wrangler pages deploy dist --project-name=syed-portfolio
+  displayName: 'Deploy to Cloudflare Pages'
+  env:
+    CLOUDFLARE_API_TOKEN: $(CF_PAGES_TOKEN)
+    CLOUDFLARE_ACCOUNT_ID: $(CF_ACCOUNT_ID)
