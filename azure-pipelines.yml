@@ -4,6 +4,9 @@ trigger:
 pool:
   name: 'selfhostedpool'
 
+variables:
+- group: 'cloudflare-vars'
+
 steps:
 - task: NodeTool@0
   inputs:
@@ -15,8 +18,7 @@ steps:
     npm run build
   displayName: 'Install dependencies and Build'
 
-- script: |
-    npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
+- script: npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
   displayName: 'Deploy to Cloudflare Pages'
   env:
     CLOUDFLARE_API_TOKEN: $(CF_PAGES_TOKEN)
