@@ -17,18 +17,20 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install
-    echo "Starting Vite Build directly..."
-    .\node_modules\.bin\vite build
+    call npm install
+    echo "Attempting to force Vite build..."
+    call .\node_modules\.bin\vite.cmd build
   displayName: 'Force Vite Build'
   workingDirectory: $(System.DefaultWorkingDirectory)
 
 - script: |
     dir
     if exist dist (
+      echo "Success: Dist folder found!"
       npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
     ) else (
-      echo "ERROR: Dist folder still missing after build!"
+      echo "ERROR: Dist folder still missing. Checking node_modules..."
+      dir node_modules\.bin\vite*
       exit 1
     )
   displayName: 'Deploy to Cloudflare Pages'
