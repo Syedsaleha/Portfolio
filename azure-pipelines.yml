@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'Default'
+  name: 'selfhostedpool' # CHANGED: Pointing to your local agent
 
 steps:
 - task: NodeTool@0
@@ -13,11 +13,11 @@ steps:
 - script: |
     npm install
     npm run build
-  displayName: 'Install and Build'
+  displayName: 'Install dependencies and Build'
 
 - script: |
-    # This pushes the 'dist' folder created by Vite to Cloudflare
-    npx wrangler pages deploy dist --project-name=syed-portfolio
+    # CHANGED: Added project name and branch flag
+    npx wrangler pages deploy dist --project-name=syed-portfolio --branch=main
   displayName: 'Deploy to Cloudflare Pages'
   env:
     CLOUDFLARE_API_TOKEN: $(CF_PAGES_TOKEN)
